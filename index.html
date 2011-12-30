@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ajk-documentor</title>
+<script src="js/jquery-1.5.1.js"></script>
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="img/tree/treeview.css" type="text/css">
+</head>
+
+<body>
+<div style="border-bottom:1px solid black; padding:5px 0 10px 0">
+	<table width="100%">
+		<tr>
+			<td width="300">
+				<a href="/interface.php?do=file" target="blank">扫描文件</a> |
+				<a href="/interface.php?do=explain" target="blank">解析代码</a> |
+				<a href="/interface.php?do=count" target="blank">生成统计</a> |
+				<a href="/">返回首页</a>
+			</td>
+			<td><span style="color:red">此为预览版, bug多多，数据存在误差</span></td>
+			<td align="center">
+				<input name="q" id="keyword" title="" type="text" size="25">
+				<a href="#tp=search_list|st_3" rel="#tp=search_list|st_3" onclick="return $.a(this);">搜索</a>
+				（输入希望搜索的类或方法关键字）共搜索到( <span id="search_num" style="color:red"></span> )笔数据
+			</td>
+		</tr>
+	</table>
+
+</div>
+<div class="main">
+    <div class="center_col" id="main">
+
+    </div>
+    <div class="leftnav" id="leftnav"></div>
+</div>
+
+
+<script>
+var rootDomain = '/pages/';
+var msg_tip = "msg_tip"; //显示状态消息层ID
+var timeout = 3000; //ajax获取数据时间限制
+var resource = "/tmp.php";  //数据接口目录
+
+var p_num = 0; //一个页面打开页面的层数
+var new_page = true; //新开页面
+//var uid = 1; // 默认用户ID
+var s_tp = {};//短连接
+
+var dfTp = "main";   //默认打开模板页面
+var dfTar = "main"; //默认载入内容的节点
+var resource = './interface.php';//数据接口
+</script>
+
+<script src="js/jquery-1.5.1.js"></script>
+<script src="js/jquery.treeview.js"></script>
+<script src="js/jquery.plugins.js"></script>
+<script src="js/jquery.kernel.js"></script>
+<script src="js/code.js"></script>
+<script>
+$(document).ready(function(){
+    //载入树
+    $.loadPage('tree','leftnav');
+
+    var loadpage = $.onLoad();
+    //alert(loadpage);
+    $.historyInit($.pageLoad, loadpage);
+
+});
+</script>
+</body>
+</html>

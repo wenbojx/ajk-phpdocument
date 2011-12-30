@@ -1,0 +1,13 @@
+
+<div id="count_main">
+
+
+</div>
+<script>
+var arg = $.getArg();
+
+$.getScript("/js/main.js", function(){
+	main.get_count_main();
+});
+
+</script>

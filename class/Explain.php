@@ -24,6 +24,7 @@ class Explain {
     	include_once('./class/ParserClass.php');
         $this->parser = new ParserClass();
 		//exit();
+		//获取正常的文件信息
         $file_list = $this->get_db_obj()->get_activit_file();
         if(!$file_list){
             die('没有可更新的文件');
@@ -47,8 +48,9 @@ class Explain {
             //print_r($val);
             $class_doc_datas = null;
             $class_datas = array();
+            //解析类
             $class_datas = $this->resolve_file($val['id']);
-            print_r($class_datas);
+            //print_r($class_datas);
             //exit();
             if(! $class_datas) {
             	$resolve_errors[] = $val['path'].$val['name'];
@@ -59,18 +61,20 @@ class Explain {
             $class_doc_datas['fid'] = $val['id'];
             $class_doc_datas['path'] = $val['path'];
             $class_doc_datas['ffid'] = $val['pid'];
-            echo 'classname=' . $class_doc_datas['cname'] . '--' . $class_doc_datas['path'] . '-- ' . $val['id'] . '--extends : '.$class_doc_datas['extends'].'<br>';
-
-print_r($class_doc_datas);
+            
             if($class_datas = $this->check_class_exit($class_doc_datas['cname'], $class_doc_datas['fid'])) {
 
                 //如果存在该类更新数据
                 $this->update_class($class_datas['id'], $class_doc_datas);
                 $pid = $class_datas['id'];
+                
+                echo 'update-----classname=' . $class_doc_datas['cname'] . '--' . $class_doc_datas['path'] . '-- ' . $val['id'] . '--extends : '.$class_doc_datas['extends'].'<br>';
+                
             } else {
                 //添加类信息
                 $class_id = $this->add_class($class_doc_datas);
                 $pid = $class_id;
+                echo 'insert-----classname=' . $class_doc_datas['cname'] . '--' . $class_doc_datas['path'] . '-- ' . $val['id'] . '--extends : '.$class_doc_datas['extends'].'<br>';
             }
 
             if(!isset($class_doc_datas['methods']) || !$class_doc_datas['methods']) {
@@ -79,13 +83,16 @@ print_r($class_doc_datas);
 
             foreach($class_doc_datas['methods'] as $v1) {
                 $v1['path'] = $val['path'];
-                echo 'functionname=' . $v1['mname'] . '<br>';
+                
                 //添加方法信息
                 if($method_datas = $this->check_method_exit($v1['mname'], $pid)) {
                     //如果存在该方法更新数据
                     $this->update_method($pid, $v1);
+                    echo 'update------functionname=' . $v1['mname'] . '<br>';
+                    
                 } else {
                     $method_id = $this->add_method($v1, $pid);
+                    echo 'insert------functionname=' . $v1['mname'] . '<br>';
                 }
             }
             echo '<br>';
@@ -101,11 +108,12 @@ print_r($class_doc_datas);
         }
         echo '----------end解析错误-------------<br><br><br>';
         //更新类pid信息
-        $this->update_class_pid();
+        //$this->update_class_pid();
+        
         if($relation){
-        echo '----------正在处理方法依赖关系.....-------------<br><br><br>';
-        //更新方法信息，获取引用该方法的类
-		$this->update_method_cite();
+	        echo '----------正在处理方法依赖关系.....-------------<br><br><br>';
+	        //更新方法信息，获取引用该方法的类
+			$this->update_method_cite();
         }
         exit();
     }

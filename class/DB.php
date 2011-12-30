@@ -15,6 +15,10 @@ class DB{
 		}
 		//更新行信息del值为1
 		$where = ' id='.$id;
+		
+		if($id==1024){
+			print_r($datas);
+		}
 		$this->get_mysql_obj()->update($this->file_table, $datas, $where);
 	}
 

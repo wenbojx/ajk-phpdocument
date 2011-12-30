@@ -10,7 +10,7 @@ class File{
 	protected $db_obj = null;
 	public $root_dir = '';
 	//需解析的文件类型
-    public $filter_file = array(
+    public $filter_file_type = array(
             'php'
     );
 	//排除的目录名
@@ -22,6 +22,9 @@ class File{
             'config',
             'cache',
             'codelist'
+    );
+    public $filter_file = array(
+	    'functions.php'
     );
     /**
      * 执行页面
@@ -57,7 +60,7 @@ class File{
      * @author wenboli
      * @param string $dir 搜索的目录
      * @param array $tree_file 文件目录树
-     * @param array $filter_file 筛选的文件
+     * @param array $filter_file_type 筛选的文件类型
      * @param int $parent_id 上级目录id
      */
     public function search_file($dir, $tree_file = array(), $parent_id = 1) {
@@ -67,9 +70,7 @@ class File{
         $files = array();
         $files_contain = array(); // 单目录下的文件及文件夹
         while($file = $mydir->read()) {
-        	/*if($i>10){
-        		exit();
-        	}*/
+
             if((is_dir($this->root_dir.$dir . DIRECTORY_SEPARATOR . $file)) && ! in_array($file, $this->exclude_folder)) {
                 $folder[0]['type'] = 2;
                 $folder[0]['name'] = $file;
@@ -82,18 +83,18 @@ class File{
                 $contents = file_get_contents($this->root_dir.$dir . DIRECTORY_SEPARATOR . $file);
                 //获取文件后缀名
                 $suffix = array_pop(explode('.', $file));
-                if(! in_array($suffix, $this->filter_file)) {
+                if(! in_array($suffix, $this->filter_file_type)) {
                     continue;
                 }
                 //判断文件内容中是否含class 或function
                 if(!$this->filter_class_function($contents)) {
 
-                	echo($dir . DIRECTORY_SEPARATOR.$file).'------++-------------<br>';
+                	echo($dir . DIRECTORY_SEPARATOR.$file).'不含类的文件------++-------------<br>';
                 	//echo $contents;
                     continue;
                 }
-                if($file == 'functions.php'){
-                	exit();
+                if(in_array($file, $this->filter_file)){
+                	continue;
                 }
                 $tree_file['ACMS_FILS_LISTS'][] = $file;
                 $files[$i]['docs'] = $contents;
@@ -112,8 +113,6 @@ class File{
             //更新列数据信息
             $this->get_db_obj()->del_files($del_list);
         }
-        //print_r($files);
-        //exit();
         //保存用户数据
         if($files){
         	$this->save_files($parent_id, $files);
@@ -133,13 +132,9 @@ class File{
         if(! is_array($files) || ! $files) {
             return false;
         }
-        //print_r($files);
         foreach($files as $v) {
-        	//print_r($v);
             //判断文件是否存在
-            //echo $v['name'].$v['path'].$v['type'].'<br>';
             if($file_data = $this->get_db_obj()->check_file_exit($v['name'], $v['path'], $v['type'])) {
-            	//echo $v['name'].$v['path'].$v['type'].'<br>';
                 //如果数据库中包含该文件，根据del值来执行
                 if(isset($file_data['del']) && $file_data['del'] == 1) {
                     $id = $file_data['id'];
@@ -162,7 +157,7 @@ class File{
                 }
                 continue;
             }
-            $this->do_update($v, $parent_id);
+            $id = $this->do_update($v, $parent_id);
         }
         unset($files);
         return $id;
@@ -188,18 +183,21 @@ class File{
 	        $str = json_encode($classes);
 	        $file['doc_class'] = addslashes($str);
         }
+        
         if($do=='insert'){
 	        $id = $this->get_db_obj()->add_file($file);
         }
         else{
         	unset($file['release']);
         	$file['modify'] = 1;
+        	$file['doc_class'] = addslashes($str);
         	$this->get_db_obj()->update_file($id, $file);
         }
         echo $file['path'] . $file['name'] . '<br>';
 
         $this->flush();
         unset($file);
+        return $id;
     }
     /**
      * 解析文件中的class内容

@@ -61,9 +61,9 @@ class Explain {
             $class_doc_datas['fid'] = $val['id'];
             $class_doc_datas['path'] = $val['path'];
             $class_doc_datas['ffid'] = $val['pid'];
-            
+            $update_flag = false;
             if($class_datas = $this->check_class_exit($class_doc_datas['cname'], $class_doc_datas['fid'])) {
-
+                $update_flag = true;
                 //如果存在该类更新数据
                 $this->update_class($class_datas['id'], $class_doc_datas);
                 $pid = $class_datas['id'];
@@ -80,7 +80,10 @@ class Explain {
             if(!isset($class_doc_datas['methods']) || !$class_doc_datas['methods']) {
                 continue;
             }
-
+            if($update_flag){
+	            //删除该类的所有方法
+	            
+            }
             foreach($class_doc_datas['methods'] as $v1) {
                 $v1['path'] = $val['path'];
                 

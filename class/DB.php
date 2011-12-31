@@ -16,9 +16,6 @@ class DB{
 		//更新行信息del值为1
 		$where = ' id='.$id;
 		
-		if($id==1024){
-			print_r($datas);
-		}
 		$this->get_mysql_obj()->update($this->file_table, $datas, $where);
 	}
 
@@ -234,6 +231,14 @@ class DB{
     	//echo $sql."<br>";
     	$datas = $this->get_mysql_obj()->fetchAll($sql);
 		return $datas;
+    }
+	/**
+     * 根据PID删除方法数据
+     * @author wenboli
+     */
+    public function del_method_by_pid ($pid){
+    	$where = ' id='.$id;
+		return $this->get_mysql_obj()->update($this->method_table, $data, $where);
     }
 	/**
      * 根据ID更新方法数据

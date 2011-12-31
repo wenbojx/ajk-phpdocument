@@ -37,7 +37,7 @@ class Reflections {
         $file_datas['doc_class'] = stripcslashes($file_datas['doc_class']);
 
         $class_list = json_decode($file_datas['doc_class'], true);
-        print_r($class_list);
+        //print_r($class_list);
 
         foreach($class_list as $v) {
             if(! $v) {

@@ -190,7 +190,7 @@ class File{
         else{
         	unset($file['release']);
         	$file['modify'] = 1;
-        	$file['doc_class'] = addslashes($str);
+        	$file['doc_class'] = addslashes($file['doc_class']);
         	$this->get_db_obj()->update_file($id, $file);
         }
         echo $file['path'] . $file['name'] . '<br>';

@@ -237,7 +237,8 @@ class DB{
      * @author wenboli
      */
     public function del_method_by_pid ($pid){
-    	$where = ' id='.$id;
+    	$where = ' id='.$pid;
+    	$data['del'] = '0';
 		return $this->get_mysql_obj()->update($this->method_table, $data, $where);
     }
 	/**

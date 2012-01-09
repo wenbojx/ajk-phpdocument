@@ -82,7 +82,7 @@ class Explain {
             }
             if($update_flag){
 	            //删除该类的所有方法
-	            
+	            $this->get_db_obj()->del_method_by_pid($pid);
             }
             foreach($class_doc_datas['methods'] as $v1) {
                 $v1['path'] = $val['path'];

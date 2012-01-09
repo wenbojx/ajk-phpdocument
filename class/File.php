@@ -151,7 +151,7 @@ class File{
                 }
                 if(isset($file_data['del']) && $file_data['del'] == 0) {
                     //更新行信息del值为1
-                    if($this->$this->get_db_obj()->update_file($file_data['id'], array('del'=>1))) {
+                    if($this->get_db_obj()->update_file(array(0=>$file_data['id']))) {
                         return $file_data['id'];
                     }
                 }

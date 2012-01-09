@@ -18,5 +18,5 @@ $CONFIG['dev'] = array(
 
 $domain = 'http://codelist.wbli.dev.aifang.com/';
 $root_dir = '/var/www/v2_anjuke_backs/'; //统计目录
-$version = '201138'; //版本号
+$version = '201202'; //版本号
 $relation = false; //是否统计方法关联性
